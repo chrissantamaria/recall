@@ -1,0 +1,239 @@
+{
+  "name": "recall",
+  "displayName": "Recall",
+  "description": "File history, line history, and stash views in the Source Control sidebar.",
+  "version": "0.1.0",
+  "type": "module",
+  "publisher": "local",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "SCM Providers"
+  ],
+  "main": "./dist/extension.js",
+  "scripts": {
+    "prepare": "husky",
+    "vscode:prepublish": "pnpm run build",
+    "build": "node --experimental-strip-types esbuild.config.ts",
+    "watch": "pnpm run build --watch",
+    "typecheck": "tsc --noEmit",
+    "package": "vsce package --no-dependencies",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/compat": "^2.0.5",
+    "@eslint/js": "^10.0.1",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.21.0",
+    "eslint": "^10.2.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.3",
+    "typescript": "^5.4.0",
+    "typescript-eslint": "^8.59.0"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "extensionDependencies": [
+    "vscode.git"
+  ],
+  "contributes": {
+    "configuration": {
+      "title": "Recall",
+      "properties": {
+        "recall.remotes": {
+          "type": "object",
+          "description": "Custom domain-to-host-type mappings for self-hosted git servers",
+          "additionalProperties": {
+            "type": "string",
+            "enum": [
+              "github",
+              "gitlab"
+            ],
+            "description": "The hosting platform type."
+          },
+          "default": {},
+          "examples": [
+            {
+              "git.mycompany.com": "gitlab"
+            }
+          ]
+        },
+        "recall.blame.inline.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show inline blame annotation at the end of the current line."
+        },
+        "recall.blame.statusBar.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show blame info in the status bar for the current line."
+        }
+      }
+    },
+    "views": {
+      "scm": [
+        {
+          "id": "recall.fileHistory",
+          "name": "File History",
+          "icon": "$(history)"
+        },
+        {
+          "id": "recall.lineHistory",
+          "name": "Line History",
+          "icon": "$(list-selection)"
+        },
+        {
+          "id": "recall.stashes",
+          "name": "Stashes",
+          "icon": "$(archive)"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "recall.fileHistory",
+        "contents": "Open a file in a Git repository to see its history."
+      },
+      {
+        "view": "recall.lineHistory",
+        "contents": "Select a line in a file in a Git repository to see its history."
+      },
+      {
+        "view": "recall.stashes",
+        "contents": "No stashes in the current repository.\nOpen a file in a Git repository first."
+      }
+    ],
+    "commands": [
+      {
+        "command": "recall.refresh",
+        "title": "Refresh",
+        "category": "Recall",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "recall.openFileDiff",
+        "title": "Open File Diff",
+        "category": "Recall"
+      },
+      {
+        "command": "recall.stash.apply",
+        "title": "Apply Stash",
+        "category": "Recall"
+      },
+      {
+        "command": "recall.stash.pop",
+        "title": "Pop Stash",
+        "category": "Recall"
+      },
+      {
+        "command": "recall.stash.drop",
+        "title": "Drop Stash",
+        "category": "Recall"
+      },
+      {
+        "command": "recall.stash.openFileDiff",
+        "title": "Open File Diff",
+        "category": "Recall"
+      },
+      {
+        "command": "recall.stash.stashChanges",
+        "title": "Stash Changes",
+        "category": "Recall"
+      },
+      {
+        "command": "recall.fileHistory.loadMore",
+        "title": "Load More File History",
+        "category": "Recall"
+      },
+      {
+        "command": "recall.lineHistory.loadMore",
+        "title": "Load More Line History",
+        "category": "Recall"
+      },
+      {
+        "command": "recall.copySha",
+        "title": "Copy Commit SHA",
+        "category": "Recall"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "recall.openFileDiff",
+          "when": "false"
+        },
+        {
+          "command": "recall.stash.apply",
+          "when": "false"
+        },
+        {
+          "command": "recall.stash.pop",
+          "when": "false"
+        },
+        {
+          "command": "recall.stash.drop",
+          "when": "false"
+        },
+        {
+          "command": "recall.stash.openFileDiff",
+          "when": "false"
+        },
+        {
+          "command": "recall.stash.stashChanges",
+          "when": "false"
+        },
+        {
+          "command": "recall.fileHistory.loadMore",
+          "when": "false"
+        },
+        {
+          "command": "recall.lineHistory.loadMore",
+          "when": "false"
+        },
+        {
+          "command": "recall.copySha",
+          "when": "false"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "recall.refresh",
+          "when": "view == recall.fileHistory || view == recall.lineHistory || view == recall.stashes",
+          "group": "navigation"
+        }
+      ],
+      "scm/resourceState/context": [
+        {
+          "command": "recall.stash.stashChanges",
+          "when": "scmProvider == git",
+          "group": "1_modification@10"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "recall.stash.apply",
+          "when": "viewItem == stash",
+          "group": "1_stash@1"
+        },
+        {
+          "command": "recall.stash.pop",
+          "when": "viewItem == stash",
+          "group": "1_stash@2"
+        },
+        {
+          "command": "recall.stash.drop",
+          "when": "viewItem == stash",
+          "group": "1_stash@3"
+        }
+      ]
+    }
+  }
+}
