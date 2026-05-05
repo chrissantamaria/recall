@@ -37,13 +37,14 @@ interface CacheKey {
 
 /**
  * Synthesizes a deterministic colored-initials SVG avatar per author.
- * Works fully offline. Gravatar is used only as an opportunistic upgrade: if the
- * user's email has a real Gravatar, the PNG replaces the SVG on disk after download.
+ * Works fully offline. On first call the SVG is returned immediately; a background
+ * fetch then attempts to upgrade it — first to a GitHub avatar (for no-reply addresses),
+ * then to Gravatar — replacing the SVG on disk if a real image is found.
  */
 export class AvatarCache {
   private readonly dirFsPath: string;
   private readonly assetsById = new Map<string, AvatarAssets>();
-  private readonly gravatarAttempts = new Set<string>();
+  private readonly upgradeAttempts = new Set<string>();
   private readonly _onDidCacheAvatar = new vscode.EventEmitter<void>();
   readonly onDidCacheAvatar = this._onDidCacheAvatar.event;
 
@@ -65,7 +66,7 @@ export class AvatarCache {
     const id = this.idFor(key);
     const cached = this.assetsById.get(id);
     if (cached) {
-      void this.maybeUpgradeToGravatar(key, id);
+      void this.maybeUpgradeAvatar(key, id);
       return cached;
     }
 
@@ -84,7 +85,7 @@ export class AvatarCache {
       dataUri: `data:image/svg+xml;base64,${Buffer.from(svg, 'utf8').toString('base64')}`,
     };
     this.assetsById.set(id, assets);
-    void this.maybeUpgradeToGravatar(key, id);
+    void this.maybeUpgradeAvatar(key, id);
     return assets;
   }
 
@@ -98,30 +99,23 @@ export class AvatarCache {
     return crypto.createHash('md5').update(raw).digest('hex');
   }
 
-  private async maybeUpgradeToGravatar(
-    key: CacheKey,
-    id: string,
-  ): Promise<void> {
+  private async maybeUpgradeAvatar(key: CacheKey, id: string): Promise<void> {
     if (!key.email) return;
-    if (this.gravatarAttempts.has(id)) return;
-    this.gravatarAttempts.add(id);
+    if (this.upgradeAttempts.has(id)) return;
+    this.upgradeAttempts.add(id);
 
-    const emailHash = crypto
-      .createHash('md5')
-      .update(key.email.trim().toLowerCase())
-      .digest('hex');
-    const url = `https://www.gravatar.com/avatar/${emailHash}?s=96&d=404`;
+    const url = githubAvatarUrl(key.email) ?? gravatarUrl(key.email);
     const buf = await fetchBinary(url);
     if (!buf) return;
 
-    const pngPath = path.join(this.dirFsPath, `${id}.png`);
+    const imgPath = path.join(this.dirFsPath, `${id}.png`);
     try {
-      fs.writeFileSync(pngPath, buf);
+      fs.writeFileSync(imgPath, buf);
     } catch {
       return;
     }
     const dataUri = `data:image/png;base64,${Buffer.from(buf).toString('base64')}`;
-    this.assetsById.set(id, { iconUri: vscode.Uri.file(pngPath), dataUri });
+    this.assetsById.set(id, { iconUri: vscode.Uri.file(imgPath), dataUri });
     this._onDidCacheAvatar.fire();
   }
 
@@ -175,6 +169,27 @@ function escapeXml(s: string): string {
             ? '&apos;'
             : '&quot;',
   );
+}
+
+// Matches GitHub's privacy no-reply format: {userId}+{login}@users.noreply.github.com
+const GITHUB_NOREPLY_RE =
+  /^(?:(?<userId>\d+)\+)?(?<login>[a-zA-Z\d-]{1,39})@users\.noreply\.github\.com$/i;
+
+function githubAvatarUrl(email: string): string | undefined {
+  const m = GITHUB_NOREPLY_RE.exec(email.trim());
+  if (!m) return undefined;
+  const { userId, login } = m.groups!;
+  return userId
+    ? `https://avatars.githubusercontent.com/u/${userId}?s=96`
+    : `https://avatars.githubusercontent.com/${login}?s=96`;
+}
+
+function gravatarUrl(email: string): string {
+  const hash = crypto
+    .createHash('md5')
+    .update(email.trim().toLowerCase())
+    .digest('hex');
+  return `https://www.gravatar.com/avatar/${hash}?s=96&d=404`;
 }
 
 function fetchBinary(url: string): Promise<Uint8Array | undefined> {
