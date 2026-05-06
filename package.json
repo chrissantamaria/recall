@@ -1,15 +1,17 @@
 {
   "name": "recall",
   "displayName": "Recall",
-  "description": "File history, line history, and stash views in the Source Control sidebar.",
+  "description": "Minimal VS Code extension that adds extra Git functionality.",
+  "author": "Chris Santamaria <chris@santamaria.me>",
+  "publisher": "chrissantamaria",
   "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/chrissantamaria/recall"
   },
   "type": "module",
-  "publisher": "local",
   "private": true,
+  "license": "MIT",
   "packageManager": "pnpm@10.33.0",
   "engines": {
     "vscode": "^1.85.0"
