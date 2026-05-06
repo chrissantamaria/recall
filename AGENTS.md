@@ -15,7 +15,7 @@ pnpm install           # dependencies (pnpm 9.x; packageManager field pins the v
 pnpm run typecheck     # tsc --noEmit, no emit
 pnpm run build         # esbuild bundles src/extension.ts -> dist/extension.js
 pnpm run watch         # esbuild --watch for dev
-pnpm dlx @vscode/vsce package --no-dependencies   # produces recall-0.1.0.vsix; --no-deps because pnpm's layout confuses vsce (safe since esbuild inlines everything)
+pnpm dlx @vscode/vsce package --no-dependencies   # produces recall-*.vsix; --no-deps because pnpm's layout confuses vsce (safe since esbuild inlines everything)
 ```
 
 **Dev loop.** Open the repo in VS Code, F5 launches an Extension Development Host (the `preLaunchTask: "build"` runs first). For subsequent code changes: **Cmd+R** in the debug window picks up rebuilt `dist/extension.js`. Manifest changes (`package.json` views, commands, menus, activation events) require a full debug-session restart, not just Cmd+R. Run `pnpm run watch` in a terminal to auto-rebuild on save.
