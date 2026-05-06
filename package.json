@@ -3,6 +3,10 @@
   "displayName": "Recall",
   "description": "File history, line history, and stash views in the Source Control sidebar.",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chrissantamaria/recall"
+  },
   "type": "module",
   "publisher": "local",
   "private": true,
