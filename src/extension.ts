@@ -31,72 +31,72 @@ export async function activate(
   context.subscriptions.push(fileHistory, lineHistory, stashes);
 
   context.subscriptions.push(
-    vscode.window.createTreeView('recall.fileHistory', {
+    vscode.window.createTreeView('backpocket.fileHistory', {
       treeDataProvider: fileHistory,
       showCollapseAll: false,
     }),
-    vscode.window.createTreeView('recall.lineHistory', {
+    vscode.window.createTreeView('backpocket.lineHistory', {
       treeDataProvider: lineHistory,
       showCollapseAll: false,
     }),
-    vscode.window.createTreeView('recall.stashes', {
+    vscode.window.createTreeView('backpocket.stashes', {
       treeDataProvider: stashes,
       showCollapseAll: true,
     }),
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('recall.refresh', () => {
+    vscode.commands.registerCommand('backpocket.refresh', () => {
       fileHistory.refresh();
       lineHistory.refresh();
       stashes.refresh();
     }),
-    vscode.commands.registerCommand('recall.fileHistory.loadMore', () =>
+    vscode.commands.registerCommand('backpocket.fileHistory.loadMore', () =>
       fileHistory.loadMore(),
     ),
-    vscode.commands.registerCommand('recall.lineHistory.loadMore', () =>
+    vscode.commands.registerCommand('backpocket.lineHistory.loadMore', () =>
       lineHistory.loadMore(),
     ),
     vscode.commands.registerCommand(
-      'recall.openFileDiff',
+      'backpocket.openFileDiff',
       async (arg: { sha: string; fileUri: vscode.Uri; hasParent: boolean }) => {
         try {
           await openCommitFileDiff(git, arg.sha, arg.fileUri, arg.hasParent);
         } catch (err) {
-          void vscode.window.showErrorMessage(`Recall: ${errMsg(err)}`);
+          void vscode.window.showErrorMessage(`Backpocket: ${errMsg(err)}`);
         }
       },
     ),
     vscode.commands.registerCommand(
-      'recall.stash.openFileDiff',
+      'backpocket.stash.openFileDiff',
       async (arg: { stashIndex: number; fileUri: vscode.Uri }) => {
         try {
           await openStashFileDiff(git, arg.stashIndex, arg.fileUri);
         } catch (err) {
-          void vscode.window.showErrorMessage(`Recall: ${errMsg(err)}`);
+          void vscode.window.showErrorMessage(`Backpocket: ${errMsg(err)}`);
         }
       },
     ),
-    vscode.commands.registerCommand('recall.stash.apply', (node: unknown) =>
+    vscode.commands.registerCommand('backpocket.stash.apply', (node: unknown) =>
       runStashAction(git, stashes, 'apply', node),
     ),
-    vscode.commands.registerCommand('recall.stash.pop', (node: unknown) =>
+    vscode.commands.registerCommand('backpocket.stash.pop', (node: unknown) =>
       runStashAction(git, stashes, 'pop', node),
     ),
-    vscode.commands.registerCommand('recall.stash.drop', (node: unknown) =>
+    vscode.commands.registerCommand('backpocket.stash.drop', (node: unknown) =>
       runStashAction(git, stashes, 'drop', node),
     ),
     vscode.commands.registerCommand(
-      'recall.stash.stashChanges',
+      'backpocket.stash.stashChanges',
       async (...resources: { resourceUri: vscode.Uri }[]) => {
         try {
           await stashSelectedChanges(git, stashes, resources);
         } catch (err) {
-          void vscode.window.showErrorMessage(`Recall: ${errMsg(err)}`);
+          void vscode.window.showErrorMessage(`Backpocket: ${errMsg(err)}`);
         }
       },
     ),
-    vscode.commands.registerCommand('recall.copySha', (sha: string) => {
+    vscode.commands.registerCommand('backpocket.copySha', (sha: string) => {
       void vscode.env.clipboard.writeText(sha);
     }),
   );
@@ -122,13 +122,15 @@ async function runStashAction(
 ): Promise<void> {
   const repo = git.activeRepo;
   if (!repo) {
-    void vscode.window.showErrorMessage('Recall: no active Git repository.');
+    void vscode.window.showErrorMessage(
+      'Backpocket: no active Git repository.',
+    );
     return;
   }
   const index = extractStashIndex(node);
   if (index === undefined) {
     void vscode.window.showErrorMessage(
-      'Recall: right-click a stash to use this action.',
+      'Backpocket: right-click a stash to use this action.',
     );
     return;
   }
@@ -160,7 +162,7 @@ async function runStashAction(
     );
     stashes.refresh();
   } catch (err) {
-    void vscode.window.showErrorMessage(`Recall: ${errMsg(err)}`);
+    void vscode.window.showErrorMessage(`Backpocket: ${errMsg(err)}`);
   }
 }
 
@@ -178,7 +180,9 @@ async function stashSelectedChanges(
 
   const repo = git.activeRepo;
   if (!repo) {
-    void vscode.window.showErrorMessage('Recall: no active Git repository.');
+    void vscode.window.showErrorMessage(
+      'Backpocket: no active Git repository.',
+    );
     return;
   }
 

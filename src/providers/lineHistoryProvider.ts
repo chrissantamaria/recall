@@ -243,7 +243,7 @@ export class LineHistoryProvider
       item.iconPath = new vscode.ThemeIcon('chevron-down');
       item.contextValue = 'loadMore';
       item.command = {
-        command: 'recall.lineHistory.loadMore',
+        command: 'backpocket.lineHistory.loadMore',
         title: 'Load More',
       };
       return item;
@@ -267,7 +267,7 @@ export class LineHistoryProvider
     item.contextValue = 'lineCommit';
     item.id = `lh-${c.hash}`;
     item.command = {
-      command: 'recall.openFileDiff',
+      command: 'backpocket.openFileDiff',
       title: 'Open File Diff',
       arguments: [
         { sha: c.hash, fileUri: node.fileUri, hasParent: node.hasParent },

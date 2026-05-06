@@ -122,7 +122,7 @@ export function buildCommitTooltip(
 ): vscode.MarkdownString {
   const md = new vscode.MarkdownString(undefined, true);
   md.supportHtml = true;
-  md.isTrusted = { enabledCommands: ['recall.copySha'] };
+  md.isTrusted = { enabledCommands: ['backpocket.copySha'] };
 
   // Header: avatar + author, relative time (absolute time)
   const authorLabel = escapeMdMinimal(c.authorName || c.authorEmail || '');
@@ -179,7 +179,7 @@ export function buildCommitTooltip(
   md.appendMarkdown('---\n\n');
   const shortHash = shortSha(c.hash);
   const copyArgs = encodeURIComponent(JSON.stringify(c.hash));
-  let footer = `$(git-commit) \`${shortHash}\` [$(copy)](command:recall.copySha?${copyArgs} "Copy commit SHA")`;
+  let footer = `$(git-commit) \`${shortHash}\` [$(copy)](command:backpocket.copySha?${copyArgs} "Copy commit SHA")`;
   if (opts.remote) {
     footer += ` &nbsp;|&nbsp; [$(globe) Open on Remote](${opts.remote.commitUrl(c.hash)})`;
   }

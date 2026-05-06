@@ -212,7 +212,7 @@ export class FileHistoryProvider
       item.iconPath = new vscode.ThemeIcon('chevron-down');
       item.contextValue = 'loadMore';
       item.command = {
-        command: 'recall.fileHistory.loadMore',
+        command: 'backpocket.fileHistory.loadMore',
         title: 'Load More',
       };
       return item;
@@ -236,7 +236,7 @@ export class FileHistoryProvider
     item.contextValue = 'fileCommit';
     item.id = `fh-${c.hash}`;
     item.command = {
-      command: 'recall.openFileDiff',
+      command: 'backpocket.openFileDiff',
       title: 'Open File Diff',
       arguments: [
         { sha: c.hash, fileUri: node.fileUri, hasParent: node.hasParent },

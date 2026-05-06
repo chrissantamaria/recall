@@ -114,7 +114,7 @@ export class InlineBlameDecoration implements vscode.Disposable {
 
   private isEnabled(): boolean {
     return vscode.workspace
-      .getConfiguration('recall.blame.inline')
+      .getConfiguration('backpocket.blame.inline')
       .get('enabled', true);
   }
 

@@ -1,13 +1,13 @@
 {
-  "name": "recall",
-  "displayName": "Recall",
+  "name": "backpocket",
+  "displayName": "Backpocket",
   "description": "Minimal VS Code extension that adds extra Git functionality.",
   "author": "Chris Santamaria <chris@santamaria.me>",
   "publisher": "chrissantamaria",
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/chrissantamaria/recall"
+    "url": "https://github.com/chrissantamaria/backpocket"
   },
   "type": "module",
   "private": true,
@@ -52,9 +52,9 @@
   ],
   "contributes": {
     "configuration": {
-      "title": "Recall",
+      "title": "Backpocket",
       "properties": {
-        "recall.remotes": {
+        "backpocket.remotes": {
           "type": "object",
           "description": "Custom domain-to-host-type mappings for self-hosted git servers",
           "additionalProperties": {
@@ -72,12 +72,12 @@
             }
           ]
         },
-        "recall.blame.inline.enabled": {
+        "backpocket.blame.inline.enabled": {
           "type": "boolean",
           "default": true,
           "description": "Show inline blame annotation at the end of the current line."
         },
-        "recall.blame.statusBar.enabled": {
+        "backpocket.blame.statusBar.enabled": {
           "type": "boolean",
           "default": true,
           "description": "Show blame info in the status bar for the current line."
@@ -87,17 +87,17 @@
     "views": {
       "scm": [
         {
-          "id": "recall.fileHistory",
+          "id": "backpocket.fileHistory",
           "name": "File History",
           "icon": "$(history)"
         },
         {
-          "id": "recall.lineHistory",
+          "id": "backpocket.lineHistory",
           "name": "Line History",
           "icon": "$(list-selection)"
         },
         {
-          "id": "recall.stashes",
+          "id": "backpocket.stashes",
           "name": "Stashes",
           "icon": "$(archive)"
         }
@@ -105,137 +105,137 @@
     },
     "viewsWelcome": [
       {
-        "view": "recall.fileHistory",
+        "view": "backpocket.fileHistory",
         "contents": "Open a file in a Git repository to see its history."
       },
       {
-        "view": "recall.lineHistory",
+        "view": "backpocket.lineHistory",
         "contents": "Select a line in a file in a Git repository to see its history."
       },
       {
-        "view": "recall.stashes",
+        "view": "backpocket.stashes",
         "contents": "No stashes in the current repository.\nOpen a file in a Git repository first."
       }
     ],
     "commands": [
       {
-        "command": "recall.refresh",
+        "command": "backpocket.refresh",
         "title": "Refresh",
-        "category": "Recall",
+        "category": "Backpocket",
         "icon": "$(refresh)"
       },
       {
-        "command": "recall.openFileDiff",
+        "command": "backpocket.openFileDiff",
         "title": "Open File Diff",
-        "category": "Recall"
+        "category": "Backpocket"
       },
       {
-        "command": "recall.stash.apply",
+        "command": "backpocket.stash.apply",
         "title": "Apply Stash",
-        "category": "Recall"
+        "category": "Backpocket"
       },
       {
-        "command": "recall.stash.pop",
+        "command": "backpocket.stash.pop",
         "title": "Pop Stash",
-        "category": "Recall"
+        "category": "Backpocket"
       },
       {
-        "command": "recall.stash.drop",
+        "command": "backpocket.stash.drop",
         "title": "Drop Stash",
-        "category": "Recall"
+        "category": "Backpocket"
       },
       {
-        "command": "recall.stash.openFileDiff",
+        "command": "backpocket.stash.openFileDiff",
         "title": "Open File Diff",
-        "category": "Recall"
+        "category": "Backpocket"
       },
       {
-        "command": "recall.stash.stashChanges",
+        "command": "backpocket.stash.stashChanges",
         "title": "Stash Changes",
-        "category": "Recall"
+        "category": "Backpocket"
       },
       {
-        "command": "recall.fileHistory.loadMore",
+        "command": "backpocket.fileHistory.loadMore",
         "title": "Load More File History",
-        "category": "Recall"
+        "category": "Backpocket"
       },
       {
-        "command": "recall.lineHistory.loadMore",
+        "command": "backpocket.lineHistory.loadMore",
         "title": "Load More Line History",
-        "category": "Recall"
+        "category": "Backpocket"
       },
       {
-        "command": "recall.copySha",
+        "command": "backpocket.copySha",
         "title": "Copy Commit SHA",
-        "category": "Recall"
+        "category": "Backpocket"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "recall.openFileDiff",
+          "command": "backpocket.openFileDiff",
           "when": "false"
         },
         {
-          "command": "recall.stash.apply",
+          "command": "backpocket.stash.apply",
           "when": "false"
         },
         {
-          "command": "recall.stash.pop",
+          "command": "backpocket.stash.pop",
           "when": "false"
         },
         {
-          "command": "recall.stash.drop",
+          "command": "backpocket.stash.drop",
           "when": "false"
         },
         {
-          "command": "recall.stash.openFileDiff",
+          "command": "backpocket.stash.openFileDiff",
           "when": "false"
         },
         {
-          "command": "recall.stash.stashChanges",
+          "command": "backpocket.stash.stashChanges",
           "when": "false"
         },
         {
-          "command": "recall.fileHistory.loadMore",
+          "command": "backpocket.fileHistory.loadMore",
           "when": "false"
         },
         {
-          "command": "recall.lineHistory.loadMore",
+          "command": "backpocket.lineHistory.loadMore",
           "when": "false"
         },
         {
-          "command": "recall.copySha",
+          "command": "backpocket.copySha",
           "when": "false"
         }
       ],
       "view/title": [
         {
-          "command": "recall.refresh",
-          "when": "view == recall.fileHistory || view == recall.lineHistory || view == recall.stashes",
+          "command": "backpocket.refresh",
+          "when": "view == backpocket.fileHistory || view == backpocket.lineHistory || view == backpocket.stashes",
           "group": "navigation"
         }
       ],
       "scm/resourceState/context": [
         {
-          "command": "recall.stash.stashChanges",
+          "command": "backpocket.stash.stashChanges",
           "when": "scmProvider == git",
           "group": "1_modification@10"
         }
       ],
       "view/item/context": [
         {
-          "command": "recall.stash.apply",
+          "command": "backpocket.stash.apply",
           "when": "viewItem == stash",
           "group": "1_stash@1"
         },
         {
-          "command": "recall.stash.pop",
+          "command": "backpocket.stash.pop",
           "when": "viewItem == stash",
           "group": "1_stash@2"
         },
         {
-          "command": "recall.stash.drop",
+          "command": "backpocket.stash.drop",
           "when": "viewItem == stash",
           "group": "1_stash@3"
         }

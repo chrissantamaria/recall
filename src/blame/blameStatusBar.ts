@@ -16,7 +16,7 @@ export class BlameStatusBar implements vscode.Disposable {
     private readonly avatars: AvatarCache,
   ) {
     this.statusBarItem = vscode.window.createStatusBarItem(
-      'recall.blame',
+      'backpocket.blame',
       vscode.StatusBarAlignment.Right,
       500,
     );
@@ -87,7 +87,7 @@ export class BlameStatusBar implements vscode.Disposable {
     );
 
     this.statusBarItem.command = {
-      command: 'recall.openFileDiff',
+      command: 'backpocket.openFileDiff',
       title: 'Open Commit Diff',
       arguments: [
         { sha: info.sha, fileUri: editor.document.uri, hasParent: true },
@@ -99,7 +99,7 @@ export class BlameStatusBar implements vscode.Disposable {
 
   private isEnabled(): boolean {
     return vscode.workspace
-      .getConfiguration('recall.blame.statusBar')
+      .getConfiguration('backpocket.blame.statusBar')
       .get('enabled', true);
   }
 

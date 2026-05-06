@@ -23,7 +23,7 @@ export class GitService implements vscode.Disposable {
     const ext = vscode.extensions.getExtension<GitExtension>('vscode.git');
     if (!ext) {
       void vscode.window.showErrorMessage(
-        'Recall: the built-in Git extension is not available.',
+        'Backpocket: the built-in Git extension is not available.',
       );
       return;
     }
@@ -90,7 +90,7 @@ export class GitService implements vscode.Disposable {
     if (!url) return undefined;
     const customRemotes =
       vscode.workspace
-        .getConfiguration('recall')
+        .getConfiguration('backpocket')
         .get<CustomRemotes>('remotes') ?? {};
     return parseRemoteUrl(url, customRemotes);
   }

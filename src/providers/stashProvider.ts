@@ -99,7 +99,7 @@ export class StashProvider
     item.iconPath = statusToIcon(f.status);
     item.contextValue = 'stashFile';
     item.command = {
-      command: 'recall.stash.openFileDiff',
+      command: 'backpocket.stash.openFileDiff',
       title: 'Open File Diff',
       arguments: [{ stashIndex: node.stashIndex, fileUri: item.resourceUri }],
     };
