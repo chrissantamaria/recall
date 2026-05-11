@@ -4,7 +4,7 @@
   "description": "Minimal VS Code extension that adds extra Git functionality.",
   "author": "Chris Santamaria <chris@santamaria.me>",
   "publisher": "chrissantamaria",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/chrissantamaria/backpocket"
