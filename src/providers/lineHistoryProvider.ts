@@ -48,6 +48,8 @@ export class LineHistoryProvider
 
   private currentFileUri: vscode.Uri | undefined;
   private currentRef: string | undefined;
+  /** Rev passed to `git log -L` as the walk tip (for diff paths). */
+  private logTipRef = 'HEAD';
   private currentRange: { start: number; end: number } | undefined;
   private queryKey: string | undefined;
   private pages = 1;
@@ -149,6 +151,10 @@ export class LineHistoryProvider
     this.queryAbort?.abort();
     const abort = new AbortController();
     this.queryAbort = abort;
+
+    if (!opts.append) {
+      this.logTipRef = this.currentRef ?? 'HEAD';
+    }
 
     const limit = PAGE_SIZE * this.pages;
     const US = '\x1f';
@@ -270,7 +276,12 @@ export class LineHistoryProvider
       command: 'backpocket.openFileDiff',
       title: 'Open File Diff',
       arguments: [
-        { sha: c.hash, fileUri: node.fileUri, hasParent: node.hasParent },
+        {
+          sha: c.hash,
+          fileUri: node.fileUri,
+          hasParent: node.hasParent,
+          logTip: this.logTipRef,
+        },
       ],
     };
     return item;

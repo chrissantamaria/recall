@@ -59,9 +59,20 @@ export async function activate(
     ),
     vscode.commands.registerCommand(
       'backpocket.openFileDiff',
-      async (arg: { sha: string; fileUri: vscode.Uri; hasParent: boolean }) => {
+      async (arg: {
+        sha: string;
+        fileUri: vscode.Uri;
+        hasParent: boolean;
+        logTip?: string;
+      }) => {
         try {
-          await openCommitFileDiff(git, arg.sha, arg.fileUri, arg.hasParent);
+          await openCommitFileDiff(
+            git,
+            arg.sha,
+            arg.fileUri,
+            arg.hasParent,
+            arg.logTip ?? 'HEAD',
+          );
         } catch (err) {
           void vscode.window.showErrorMessage(`Backpocket: ${errMsg(err)}`);
         }

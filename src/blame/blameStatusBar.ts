@@ -90,7 +90,12 @@ export class BlameStatusBar implements vscode.Disposable {
       command: 'backpocket.openFileDiff',
       title: 'Open Commit Diff',
       arguments: [
-        { sha: info.sha, fileUri: editor.document.uri, hasParent: true },
+        {
+          sha: info.sha,
+          fileUri: editor.document.uri,
+          hasParent: true,
+          logTip: 'HEAD',
+        },
       ],
     };
 

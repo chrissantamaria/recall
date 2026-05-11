@@ -48,6 +48,8 @@ export class FileHistoryProvider
 
   private currentFileUri: vscode.Uri | undefined;
   private currentRef: string | undefined;
+  /** Rev used as the tip of `git log --follow` for the active query (for diff paths). */
+  private logTipRef = 'HEAD';
   private commits: CommitNode[] = [];
   private loading = false;
   private hasMore = false;
@@ -133,7 +135,10 @@ export class FileHistoryProvider
     const abort = new AbortController();
     this.queryAbort = abort;
 
-    if (!opts.append) this.commits = [];
+    if (!opts.append) {
+      this.commits = [];
+      this.logTipRef = this.currentRef ?? 'HEAD';
+    }
     this.loading = true;
     this.errorMessage = undefined;
     this.hasMore = false;
@@ -239,7 +244,12 @@ export class FileHistoryProvider
       command: 'backpocket.openFileDiff',
       title: 'Open File Diff',
       arguments: [
-        { sha: c.hash, fileUri: node.fileUri, hasParent: node.hasParent },
+        {
+          sha: c.hash,
+          fileUri: node.fileUri,
+          hasParent: node.hasParent,
+          logTip: this.logTipRef,
+        },
       ],
     };
     return item;
