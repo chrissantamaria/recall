@@ -91,6 +91,10 @@ export async function activate(
     vscode.commands.registerCommand('backpocket.stash.apply', (node: unknown) =>
       runStashAction(git, stashes, 'apply', node),
     ),
+    vscode.commands.registerCommand(
+      'backpocket.stash.applyFile',
+      (node: unknown) => applyStashFile(git, stashes, node),
+    ),
     vscode.commands.registerCommand('backpocket.stash.pop', (node: unknown) =>
       runStashAction(git, stashes, 'pop', node),
     ),
@@ -123,6 +127,62 @@ function extractStashIndex(node: unknown): number | undefined {
   if (n.kind !== 'stash') return undefined;
   const idx = n.entry?.index;
   return typeof idx === 'number' ? idx : undefined;
+}
+
+function extractStashFileApply(
+  node: unknown,
+): { stashIndex: number; relPath: string } | undefined {
+  if (!node || typeof node !== 'object') return undefined;
+  const n = node as {
+    kind?: unknown;
+    stashIndex?: unknown;
+    file?: { path?: unknown };
+  };
+  if (n.kind !== 'file') return undefined;
+  const stashIndex = n.stashIndex;
+  const relPath = n.file?.path;
+  return typeof stashIndex === 'number' && typeof relPath === 'string'
+    ? { stashIndex, relPath }
+    : undefined;
+}
+
+async function applyStashFile(
+  git: GitService,
+  stashes: StashProvider,
+  node: unknown,
+): Promise<void> {
+  const repo = git.activeRepo;
+  if (!repo) {
+    void vscode.window.showErrorMessage(
+      'Backpocket: no active Git repository.',
+    );
+    return;
+  }
+  const spec = extractStashFileApply(node);
+  if (!spec) {
+    void vscode.window.showErrorMessage(
+      'Backpocket: right-click a file under a stash to apply it.',
+    );
+    return;
+  }
+  const stashRef = `stash@{${spec.stashIndex}}`;
+  const rootPath = repo.rootUri.fsPath;
+  try {
+    await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.SourceControl,
+        title: 'Applying stashed file...',
+      },
+      () =>
+        git.runGit(
+          ['restore', '--source', stashRef, '--worktree', '--', spec.relPath],
+          { cwd: rootPath },
+        ),
+    );
+    stashes.refresh();
+  } catch (err) {
+    void vscode.window.showErrorMessage(`Backpocket: ${errMsg(err)}`);
+  }
 }
 
 async function runStashAction(

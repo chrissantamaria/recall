@@ -135,6 +135,11 @@
         "category": "Backpocket"
       },
       {
+        "command": "backpocket.stash.applyFile",
+        "title": "Apply Changes",
+        "category": "Backpocket"
+      },
+      {
         "command": "backpocket.stash.pop",
         "title": "Pop Stash",
         "category": "Backpocket"
@@ -178,6 +183,10 @@
         },
         {
           "command": "backpocket.stash.apply",
+          "when": "false"
+        },
+        {
+          "command": "backpocket.stash.applyFile",
           "when": "false"
         },
         {
@@ -238,6 +247,11 @@
           "command": "backpocket.stash.drop",
           "when": "viewItem == stash",
           "group": "1_stash@3"
+        },
+        {
+          "command": "backpocket.stash.applyFile",
+          "when": "viewItem == stashFile",
+          "group": "1_stash@1"
         }
       ]
     }
